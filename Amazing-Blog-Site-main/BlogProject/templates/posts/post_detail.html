@@ -1,0 +1,87 @@
+
+
+{% block content %}
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .post-details {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .post-details h2 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .post-details p {
+        margin-bottom: 10px;
+    }
+
+    .post-details strong {
+        font-weight: bold;
+    }
+
+    .featured-image {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .post-content {
+        margin-top: 20px;
+        line-height: 1.6;
+    }
+
+    p{
+        padding:10px 0px !important;
+    }
+</style>
+
+
+
+    <div class="container">
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {% for message in messages %}
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+        <div class="post-details">
+            <div class="d-flex justify-content-between">
+            <h2 class="mr-3">{{ post.title }}</h2>
+            <div>
+            <a href="{% url 'post-update' post.slug %}" class="btn btn-primary"><i class="fas fa-pen"></i></a>
+            </div>
+            </div>
+            <p><strong>Date Posted:</strong> {{ post.date_posted }}</p>
+            <p><strong>Author:</strong> {{ post.author }}</p>
+            <p><strong>Categories:</strong>
+                {% for category in post.categories.all %}
+                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No categories
+                {% endfor %}
+            </p>
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" alt="Featured Image" class="featured-image">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <div class="post-content">
+                <p><strong>Content:</strong>  {{ post.content }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

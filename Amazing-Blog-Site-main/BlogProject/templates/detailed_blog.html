@@ -1,0 +1,117 @@
+{% extends 'index.html' %} 
+{% load category_tags %}
+{% block content %}
+
+<nav aria-label="breadcrumb  text-center  ">
+  <ol class="breadcrumb py-5  text-center justify-content-center">
+    <li class="breadcrumb-item"><a href="/" class="text-dark "> <h5>Home</h5> </a></li>
+    <li class="breadcrumb-item active text-dark " aria-current="page"><h5 class="d-flex ">Detailed Blog</h5></li>
+  </ol>
+</nav>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <article>
+          <img src="{{ blog.display_image }}" alt="Block 1 Image" class="img-fluid">
+
+          <h1 class="my-5">{{blog.title}}</h1>
+          <p class="text-muted mb-3"> Category :{% for category in blog.categories.all  %}
+            {{ category.name }},
+         {% endfor %}</p>
+          <p class="text-muted mb-3">Published on {{blog.date_posted}}</p>
+          <p class=" justify-content-between d-flex">
+            {{blog.content}}
+          </p>
+
+          <div class="mt-5">
+            <h4 class="my-4">Like and Comment Section</h4>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="likes d-flex align-baseline">
+                <div class="like-dislike">
+                  {% if is_liked %}
+                  <button
+                    id="dislike-button"
+                    class="btn btn-danger btn-sm"
+                    name="{{ blog.slug }}">
+                    Dislike
+                  </button>
+                  {% else %}
+                  <button
+                    id="like-button"
+                    class="btn btn-primary btn-sm"
+                    name="{{ blog.slug }}"
+                  >
+                    Like
+                  </button>
+                  {% endif %}
+                </div>
+                <span id="like-count" class="ml-2 mx-2 mt-2">
+                  <span id="like-count-total"> {{ total_like.count }} </span>
+                  Likes</span
+                >
+              </div>
+              <div class="comments">
+                  <p class=" alert alert-light"> {{blog.view_count}} Views </p>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="comment-message"></div>
+              <h5 class="my-3">Leave a Comment</h5>
+
+              <form
+                id="comment-form"
+                method="post"
+                action="{% url 'detailed-blog' blog.slug %}"
+                novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="slug" value="{{blog.slug}}">
+                <div class="form-group">
+                  {{ comment_form.content }} 
+                  <div class="errors">
+                 </div>
+                </div>
+                <button type="submit" class="btn btn-primary my-3">
+                  Submit
+                </button>
+              </form>
+            </div>
+
+            <div class="mt-5">
+              <h5 class="mb-4">Comments</h5>
+              <ul class="list-group">
+                {% for comment in comments %}
+                <li class="list-group-item px-5 py-3 {% if forloop.first %} bg-light {% endif %}">
+                  <strong>{{ comment.author }}</strong>
+                  <p class="mt-2">{{ comment.content }}</p>
+                  <small class="text-muted">{{ comment.date_posted }}</small>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="col-lg-4">
+        <div class="card my-3">
+          <div class="card-body">
+            <h5 class="card-title">All Categories</h5>
+            <ul class="list-group border-none">
+              {% get_all_categories as all_categories %}
+                {% for category in all_categories %}
+                  <a class="text-dark my-2" href="{% url 'post_list_by_category' category.slug %}">
+                    <li class="list-group-item px-5">{{ category.name }}</li>
+                  </a>
+                  {% endfor  %}
+              </ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

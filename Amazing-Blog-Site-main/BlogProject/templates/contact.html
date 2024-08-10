@@ -1,0 +1,61 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb  text-center  ">
+  <ol class="breadcrumb py-5  text-center justify-content-center">
+    <li class="breadcrumb-item"><a href="/" class="text-dark "> <h5>Home</h5> </a></li>
+    <li class="breadcrumb-item active text-dark " aria-current="page"><h5 class="d-flex ">Contact Us</h5></li>
+  </ol>
+</nav>
+
+<div class="container py-2 mb-5">
+  <div class="contact-form">
+    <h1 class="text-center mb-4">Contact Us</h1>
+
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {% for message in messages %}
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+    {% if form.errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        There was an error in the form. Please correct the errors below.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
+  
+    <form method="post" action="/contact/" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        {{ form.name }}
+        {% for error in form.name.errors %}
+          <div class="errorlist">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+          <div class="errorlist">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        {{ form.message }}
+        {% for error in form.message.errors %}
+          <div class="errorlist">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+
+
+{% block content %}
+    <div class="container">
+        <div class="d-flex justify-content-between my-4">
+            <h2 class="mx-3"> All Categories </h2>
+            <a href="{% url 'category-create' %}" class="btn btn-primary"> Add <i class="fas fa-plus mt-2"></i></a>
+           </div>
+
+           
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {% for message in messages %}
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="table-responsive">
+    <table id="post-table" class="table table-bordered  text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                  <td>{{ category.id }}</td>
+
+                    <td>{{ category.name }}</td>
+                    
+                    <td><a href="{% url 'category-update' category.slug %}" class="mx-3">Update </a> / <a href="{% url 'category_delete' category.slug %}" class="mx-3"> Delete </a></td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+{% endblock %}

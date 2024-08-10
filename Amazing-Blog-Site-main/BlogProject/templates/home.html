@@ -1,0 +1,238 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<div class="main_div">
+  <div id="homeSlider" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+     
+      {% for i in posts %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{i.display_image}}" class="d-block w-100 courimage" alt="Image 1">
+        <div class="carousel-caption d-flex align-items-start my-5">
+          <div class="container">
+            <div class="row justify-content-center ">
+              <div class="col-lg-8">
+                <h1>{{ i.title }}</h1>
+                <p>Date: {{ i.date_posted }}</p>
+                <p>{{ i.content|truncatewords:20 }}</p>
+                <a href="{% url 'detailed-blog' i.slug %}" class="btn btn-primary">Detailed View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#homeSlider" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#homeSlider" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+
+<div class="container my-2 mb-5" style="margin-top:7em  !important; margin-bottom:7em !important;">
+  <h1 class="text-center mt-5">Most Viewed Articles</h1>
+  <div class="row mt-5">
+
+      {% for i in featured_post %}
+      <div class="col-lg-4 col-md-12 col-12 my-3">
+        <div class="block">
+          <div class="row">
+            <div class="col-lg-12 col-6">
+              <img src="{{ i.display_image }}" alt="Block 1 Image" class="img-fluid">
+            </div>
+            <div class="col-lg-12 col-6">
+              <h5 class="my-2 py-2">{{i.title}}</h5>
+              <a href="{% url 'detailed-blog'  i.slug %}" class="my-2 view_button searchButton btn btn-outline-success" >
+                View Now 
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+  </div>
+</div>
+
+<div class="container my-5 align-items-center" style="margin-top:7em  !important; margin-bottom:6em !important;">
+  <h1 class="text-center mt-5 mt-5">Recommended for you</h1>
+  <div class="row my-5">
+    {% if recomend %}
+    <div class="owl-carousel owl-theme">
+      {% for j in recomend %}
+      <a href="{% url 'detailed-blog'  j.slug %}" style="text-decoration: none !important; color: black !important;">
+      <div class="card">
+        <img src="{{ j.display_image }}" alt="Block 1 Image" class="img-fluid">
+        <div class="card-body">
+          <p class="card-title">{{j.title}}</p>
+        </div>
+      </div>
+     </a>
+      {% endfor %}
+    </div>
+    {% else %}
+
+    <p class="text-center"> "We are waiting for you to explore our site. Please note that you will only receive recommendations if you are logged in."</p>
+
+    {% endif %}
+    
+  </div>
+</div>
+
+
+
+<div class="container my-5 align-items-center" style="margin-top:7em  !important; margin-bottom:4em !important;">
+  <h1 class="text-center mt-5 mt-5">Trending Categories</h1>
+  <div class="row my-5">
+    <div class="owl-carousel owl-theme">
+    
+      {% for j in category %}
+      <a href="{% url 'post_list_by_category' j.slug %}" style="text-decoration: none !important; color: black !important;">
+      <div class="card mycategory" id="{{j.name}}">
+        <div class="card-body">
+          <p class="card-title">{{j.name}}</p>
+        </div>
+      </div>
+      </a>
+      {% endfor %}
+
+    </div>
+    
+  </div>
+</div>
+
+
+
+<div class="container mb-4">
+  <h1 class="text-center mt-5">Blog Collection</h1>
+  <div class="row mt-5">
+
+    {% if posts %}
+    {% for j in posts %}
+    <div class="col-md-6">
+      <div class="card bg-dark text-white mb-4">
+        <img src="{{ j.display_image }}" alt="Block 1 Image" class="img-fluid">
+        
+        <div class="card-img-overlay">
+          <h5 class="card-title">{{j.title}}</h5>
+          <p class="card-text">{{j.date_posted}}</p>
+          <a href="{% url 'detailed-blog' j.slug %}" class="btn btn-primary">Read More</a>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+  
+  </div>
+</div>
+
+
+
+
+<div class="container mb-4" style="margin-top:7em  !important; margin-bottom:7em !important;">
+  <h1 class="text-center mt-5">Our Customers Review</h1>
+
+<div id="reviewCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-bs-target="#reviewCarousel" data-bs-slide-to="0" class="active"></li>
+    <li data-bs-target="#reviewCarousel" data-bs-slide-to="1"></li>
+    <li data-bs-target="#reviewCarousel" data-bs-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active" style="height:10% !important">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 ">
+            <div class="review-card mt-5 ">
+              <h3 class="title_text" >Customer Review 1</h3>
+              <div class="review-text">
+                <p class="title_text" >
+                  I love reading with mindfulness and content is informative, backed by experts, and provides actionable tips for leading a healthy lifestyle.
+                </p>
+              </div>
+              <div class="review-author">
+                <h5 class="title_text">John Doe</h5>
+                <p class="title_text">CEO, Rocket Inc.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item" style="height:10% !important">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <div class="review-card mt-5">
+              <h3 class="title_text" >Customer Review 2</h3>
+              <div class="review-text">
+                <p class="title_text">
+                  The site's user-friendly interface and organized categories make it easy to navigate and find relevant information. If you're passionate about technology, Tech Insights is a go-to blog site.
+                </p>
+              </div>
+              <div class="review-author">
+                <h5 class="title_text">Jane Smith</h5>
+                <p class="title_text" >Marketing Manager</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item" style="height:10% !important">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <div class="review-card mt-5">
+              <h3 class="title_text" >Customer Review 3</h3>
+              <div class="review-text">
+                <p class="title_text" >
+                  Whether you're looking to improve your physical or mental well-being, Healthy Living is a fantastic resource and content is informative, backed by experts, and provides actionable tips for leading a healthy lifestyle
+                </p>
+              </div>
+              <div class="review-author ">
+                <h5 class="title_text">Michael Johnson</h5>
+                <p class="title_text">Product Manager</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#reviewCarousel" role="button" data-bs-slide="prev">
+    <span class=" text-dark" aria-hidden="true"><i class="fas fa-arrow-left mx-3"></i></span>
+  </a>
+  <a class="carousel-control-next text-dark" href="#reviewCarousel" role="button" data-bs-slide="next">
+    <span class="  text-dark" aria-hidden="true"><i class="fas fa-arrow-right mx-3"></i></span>
+  </a>
+</div>
+</div>
+
+
+<div class="container py-5 ">
+  <div class="subscribe-form  py-5">
+    <h2>Subscribe to our Newsletter</h2>
+    <form>
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <input type="email" name="email" placeholder="Enter your email address" required>
+        </div>
+        <div class="col-md-8 offset-md-2">
+          <button type="submit">Subscribe</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

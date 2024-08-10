@@ -1,0 +1,89 @@
+
+{% block content %}
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card shadow-lg">
+            <div class="card-body p-4">
+             
+             
+              <div class="tab-content">
+                {% if post_update_form.errors %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{post_update_form.errors}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endif %}
+                <div class="show active" >
+                  
+                  <h2 class="text-center mb-5">Change Password </h2>
+                  <form method="POST" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="title" class="form-label">Title</label>
+                      {{ post_update_form.title }}
+                      <div class="text-danger py-2">
+                        {% if post_update_form.title.errors %}
+                          {% for error in post_update_form.title.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="content" class="form-label">Content</label>
+                      {{ post_update_form.content }}
+                      <div class="text-danger py-2">
+                        {% if post_update_form.content.errors %}
+                          {% for error in post_update_form.content.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+              
+                    <div class="mb-3">
+                      <label for="categories" class="form-label">Categories</label>
+                      {{ post_update_form.categories }}
+                      <div class="text-danger py-2">
+                        {% if post_update_form.categories.errors %}
+                          {% for error in post_update_form.categories.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="featured_image" class="form-label">Featured Image</label>
+                      {{ post_update_form.featured_image }}
+                      <div class="text-danger py-2">
+                        {% if post_update_form.featured_image.errors %}
+                          {% for error in post_update_form.featured_image.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                    
+                  
+                    
+                    <div class="text-center my-4">
+                      <a href="{% url 'post-list' %}" class="btn btn-primary">back</a>
+
+                      <button type="submit" class="btn btn-primary">Update Post</button>
+                    </div>
+                  </form>
+                </div>
+             
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

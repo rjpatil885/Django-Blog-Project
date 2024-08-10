@@ -1,0 +1,135 @@
+{% load static %}
+{% load category_tags %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <title>Hello, world!</title>
+  </head>
+  <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"><i class="fas fa-book fa-3x mx-lg-5 mx-md-4 mx-1 text-secondary"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse mx-auto" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto my-lg-1 my-md-1 my-3">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Category        
+          </a>
+          {% get_all_categories as all_categories %}
+          <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+              {% for category in all_categories %}
+                <li class="dropdown-item"> <a href="{% url 'post_list_by_category' category.slug %} " style="text-decoration: none !important; color: black !important;" >{{ category.name }} </a> </li>
+              {% endfor %}
+          </ul>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'contact' %}">Contact</a>
+        </li>
+      </ul>
+      <form id="desktopSearch" class="d-none d-lg-flex">
+        <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button id="searchButton" class="btn btn-outline-success text-dark" type="submit">
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+
+      <ul class="navbar-nav me-right mb-2 mb-lg-0 mx-2">
+        {% if request.user.is_authenticated %}
+       
+      
+        <li class="nav-item dropdown ">
+          <a class="nav-link dropdown-toggle  mx-lg-5 mx-md-0 mx-sm-0 mx-0" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            My Account        
+          </a>
+          <ul class="dropdown-menu mx-lg-5 mx-md-0 mx-sm-0 mx-0" aria-labelledby="categoryDropdown">
+            <li class="dropdown-item"> <a href="{% url 'myaccount' %}" style="text-decoration: none !important; color: black !important;">My profile</a></li>
+
+            <li class="dropdown-item"> 
+              
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+
+            </li>
+          </ul>
+        </li>
+    
+        {% else %}
+
+        <li class="nav-item">
+        <a class="nav-link login-signup-link" href="{% url 'login' %}" tabindex="-1" aria-disabled="true"> <small> <i class="fa fa-user"></i> Login / Signup </small> </a>
+        </li>
+
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="mobileSearch" class="d-lg-none">
+  <form class="d-flex mobileSearch">
+    <input class="mobilesearchInput form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <button class=" btn btn-outline-success" type="submit">
+      <i class="fa fa-search"></i>
+    </button>
+  </form>
+</div>
+
+  <div class="searchResults"></div>
+
+  <div class="main_content">
+ {% block content %}
+
+ {% endblock %}
+</div>
+
+ <footer class="footer my-5">
+  <div class="container text-center">
+    <p>&copy; <span id="currentYear"></span> Rupesh Patil. All rights reserved. | <a href="/terms_condition/">Terms and Conditions</a></p>
+  </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+    <script src="{% static 'script.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      
+    <script>
+     $('.owl-carousel').owlCarousel({
+    loop:false,
+    margin:10,
+    nav:true,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:2
+        },
+        1000:{
+            items:3
+        },
+        1100:{
+            items:4
+        }
+    }
+})
+    </script>
+  </body>
+</html>

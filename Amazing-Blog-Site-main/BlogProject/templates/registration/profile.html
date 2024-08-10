@@ -1,0 +1,402 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<style>
+ 
+.profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+  }
+
+.sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  position: fixed;
+  height: 80%;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+.sidebar .nav-link {
+  color: #212529;
+  font-weight: bold;
+  padding: 10px 20px;
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+}
+
+.sidebar .nav-item.active .nav-link {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.content {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+  }
+}
+
+.sidebar {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.sidebar .nav-link {
+  border-radius: 5px;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9ecef;
+  color: #000;
+}
+
+.content {
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+
+
+.container.myprofile {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.user-details {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.user-details h5 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.user-details a.btn {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.user-details p {
+  margin: 0;
+  padding-top: 1rem;
+}
+
+.user-details strong {
+  font-weight: bold;
+}
+
+.user-details {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+     
+    
+
+
+</style>
+<div class="sidebar my-2 mx-lg-3 mx-0">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link" href="/accounts/profile/">Dashboard</a>
+    </li>
+    {% if user.is_superuser %}
+    <li class="nav-item">
+      <a class="nav-link" href="/posts/">All Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/categories/">All Categories</a>
+    </li>
+  {% endif %}
+
+    <li class="nav-item">
+      <a class="nav-link" href="#"></a>
+    </li>
+    <li class="nav-item header">
+      <span class="py-5">My Account </span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#"></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'password_change' %}">Reset Password </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'myaccount' %}">My Account </a>
+    </li>
+    
+  </ul>
+</div>
+
+<div class="content">
+
+
+  {% if in_profile %}
+
+ 
+  <div class="container dashboard-profile px-4 mb-5">
+    <h1 class="my-3 py-4">Welcome to the Dashboard</h1>
+    <p class="my-3 p-2 ">As a valued member, we extend a warm welcome and express our gratitude for being part of our platform.</p>
+    <p class=" p-2">To help you get started, here are some useful links:</p>
+    <p class="px-2" >
+      <strong>My Account:</strong> Access and manage your account details <a href="{% url 'myaccount' %}">here</a>.
+    </p>
+    {% if user.is_superuser %}
+    <p class="px-2">
+      <strong>View All Posts:</strong> Explore posts from individuals across various topics <a href="{% url 'post-list' %}">here</a>.
+    </p>
+    <p class="px-2">
+      <strong>Browse Categories:</strong> Discover posts organized by different themes <a href="{% url 'category-list' %}">here</a>.
+    </p>
+    <p class="px-2">
+      <strong>Write a Post:</strong> Share your thoughts and ideas <a href="{% url 'post-create' %}">here</a>.
+    </p>
+
+    {% endif %}
+  </div>
+  
+  
+
+  {% endif %}
+
+
+  {% if update_form %}
+  <section class="">
+  
+    <div class="container">
+      <div class="row justify-content-center my-4">
+        
+        <div class="col-lg-6 ">
+          <h4 class="text-center"> Update Profile </h4>
+          <div class="card shadow-lg">
+            <div class="card-body p-4">
+             
+              <div class="tab-content ">
+                {% if update_form.errors %}
+                  <div class="alert alert-danger alert-dismissible fade show py-2 " role="alert">
+                    {{ update_form.errors }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endif %}
+                <div class=" show  " id="update-form">
+                
+                  <form method="post" action="{% url 'update_profile' %}" novalidate enctype=multipart/form-data>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                      <label for="{{ form.name.id_for_label }}" class="form-label">Username</label>
+                      {{ update_form.username }}
+                      {% if form.username.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in update_form.username.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="{{ update_form.email.id_for_label }}" class="form-label">Email address</label>
+                      {{ update_form.email }}
+                      {% if update_form.email.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in update_form.email.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                      {{ profile_form.profile_picture }}
+                      {% if profile_form.profile_picture.errors %}
+                          <div class="text-danger py-2">
+                              {% for error in profile_form.profile_picture.errors %}
+                                  <span>{{ error }}</span>
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+
+                  </div>
+                  
+
+                    <div class="mb-3">
+                      <label for="{{ update_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                      {{ update_form.first_name }}
+                      {% if update_form.first_name.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in update_form.first_name.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+               
+                    <div class="mb-3">
+                      <label for="{{ update_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                      {{ update_form.last_name }}
+                      {% if update_form.last_name.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in update_form.last_name.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+
+                    <div class="mb-3">
+                      <label for="{{ profile_form.bio.id_for_label }}" class="form-label">Bio</label>
+                      {{ profile_form.bio }}
+                      {% if profile_form.bio.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in profile_form.bio.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    
+
+                    <div class="mb-3">
+                      <label for="{{ profile_form.social_media_links.id_for_label }}" class="form-label">Social Media Links</label>
+                      {{ profile_form.social_media_links }}
+                      {% if profile_form.social_media_links.errors %}
+                        <div class="text-danger  py-2">
+                          {% for error in profile_form.social_media_links.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="text-center ">
+                      <button type="submit" class="btn btn-primary  my-4 ">Update</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="tab-pane" id="login-form">
+              
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+ {% if user_profile %}
+  <div class="container myprofile mt-4 mb-3">
+    <div class="user-details">
+      <div class="d-flex justify-content-between my-2 py-0 pb-0">
+        <div>
+          <h5>
+            {% if user_profile.profile_picture %}
+            <img src="{{ user_profile.profile_picture.url }}" alt="" class="img-fluid profile-picture mx-3">
+            {% endif %}
+        {{ user_profile.user.username }}
+      </h5>
+      </div>
+      <div>
+        <a href="{% url 'update_profile' %}" class="btn btn-primary "> <i class="fas fa-pen "></i></a>
+      </div>
+    </div>
+
+        <p class="py-4"><strong>Username:</strong> {{ user_profile.user.username }}</p>
+        <p class="py-4"><strong>Email:</strong> {{ user_profile.user.email }}</p>
+        <p class="py-4"><strong>First Name:</strong> {{ user_profile.user.first_name }}</p>
+        <p class="py-4"><strong>Last Name:</strong> {{ user_profile.user.last_name }}</p>
+        <p class="py-4"><strong>Bio:</strong> {{ user_profile.bio }}</p>
+        <p class="py-4"><strong>Social Links:</strong> {{ user_profile.social_media_links }}</p>
+
+    </div>
+  </div>
+  {% endif %}
+
+  {% if posts or post_empty %}
+  {% include 'posts/post_list.html' %}
+  {% endif %}
+
+  {% if post  %}
+  {% include 'posts/post_detail.html' %}
+  {% endif %}
+
+  {% if post_update_form %}
+  {% with 'posts/post_update.html' as template %}
+    {% with post_update_form as form %}
+        {% include template %}
+    {% endwith %}
+    {% endwith %}
+  {% endif %}
+  
+
+
+{% if post_create_form %}
+{% with 'posts/post_create.html' as template %}
+  {% with post_create_form as form %}
+      {% include template %}
+  {% endwith %}
+  {% endwith %}
+{% endif %}
+
+
+{% if category_create_form %}
+{% with 'posts/category_create.html' as template %}
+  {% with category_create_form as form %}
+      {% include template %}
+  {% endwith %}
+  {% endwith %}
+{% endif %}
+
+
+{% if category_update_form %}
+{% with 'posts/category_update.html' as template %}
+  {% with category_update_form as form %}
+      {% include template %}
+  {% endwith %}
+  {% endwith %}
+{% endif %}
+
+
+
+{% if categories or category_empty %}
+{% include 'posts/category_list.html' %}
+{% endif %}
+
+{% endblock content %}

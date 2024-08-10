@@ -1,0 +1,48 @@
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card shadow-lg">
+            <div class="card-body p-4">
+              <div class="tab-content">
+                {% if category_create_form.errors %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{category_create_form.errors}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endif %}
+                <div class="show active" >
+                  <h2 class="text-center mb-5"> Create Category </h2>
+                  <form method="POST" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                      <label for="title" class="form-label">Name</label>
+                      {{ category_create_form.name }}
+                      <div class="text-danger py-2">
+                        {% if category_create_form.name.errors %}
+                          {% for error in category_create_form.name.errors %}
+                            <span>{{ error }}</span>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                    
+                 
+                    <div class="text-center my-4">
+                      <a href="{% url 'category-list' %}" class="btn btn-primary">back</a>
+                      <button type="submit" class="btn btn-primary">Create Category</button>
+                    </div>
+                  </form>
+                </div>
+             
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
